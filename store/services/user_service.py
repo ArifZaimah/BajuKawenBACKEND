@@ -25,3 +25,17 @@ def create_user(name, email, password, create_datetime, update_datetime):
         'create_datetime': create_datetime,
         'update_datetime': update_datetime
     })
+
+# Function to delete a user from Firestore
+def delete_user(user_id):
+    try:
+        user_ref = db.collection('users').document(user_id)
+        # Check if the user exists
+        if user_ref.get().exists:
+            user_ref.delete()
+            return True
+        else:
+            return False  # User not found
+    except Exception as e:
+        # print(f"Error deleting user {user_id}: {str(e)}")
+        return False

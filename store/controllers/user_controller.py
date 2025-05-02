@@ -42,3 +42,30 @@ def create_user(request):
     except Exception as e:
         print("Error creating user:", str(e))
         return error_response(f"Failed to create user: {str(e)}")
+
+@csrf_exempt
+def delete_user(request):
+    if request.method != "DELETE":
+        return error_response("Only DELETE method is allowed.", 405)
+
+    try:
+        data = request.body
+
+        # Step 1: Decode the byte string
+        body_string = data.decode("utf-8")
+
+        # Step 2: Parse the JSON to a Python dictionary
+        body_data = json.loads(body_string)
+
+        # Step 3: Extract 'user_id' from the dictionary
+        user_id = body_data.get("user_id")
+
+        print("user id: ", user_id)
+       
+        if user_service.delete_user(user_id):
+            return success_response("User deleted successfully.")
+        else:
+            return error_response("User not found.", 404)
+    except Exception as e:
+        print("Error deleting user:", str(e))
+        return error_response(f"Failed to delete user: {str(e)}")
